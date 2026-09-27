@@ -2,6 +2,10 @@
 
 Projeto de análise de dados e classificação de fraudes em transações de cartão de crédito, desenvolvido em Python com foco em **dados desbalanceados, comparação de modelos, explicabilidade e validação metodológica**.
 
+> **Contexto acadêmico:** DIO Bootcamp Bradesco — GenAI, Dados & Cyber, Módulo 05 — Análise de Dados com Python, Desafio de Projeto 5.8 — Detecção de Anomalias em Transações em Python.
+>
+> **Auditoria de prontidão para avaliação:** 26/09/2026. Consulte [`AUDIT_STATUS.md`](AUDIT_STATUS.md).
+
 ## Visão geral
 
 O dataset contém **284.807 transações**, das quais **492 são fraudes** — aproximadamente **0,1727%** da base. Por isso, a análise não usa acurácia isoladamente como critério de qualidade.
@@ -74,6 +78,9 @@ Variáveis principais:
 ```text
 credit-card-fraud-detection-ml/
 ├── README.md
+├── AUDIT_STATUS.md
+├── LICENSE
+├── NOTICE.md
 ├── requirements.txt
 ├── .gitignore
 ├── notebooks/
@@ -130,6 +137,8 @@ As principais etapas aleatórias utilizam `random_state=42`.
 
 Os tempos de execução não são considerados métricas determinísticas e podem variar conforme o runtime.
 
+A auditoria de 26/09/2026 preservou a limitação histórica de versões de dependências em vez de criar um lockfile retroativo sem evidência. Detalhes em [`AUDIT_STATUS.md`](AUDIT_STATUS.md).
+
 ## Limitações
 
 - forte desbalanceamento da classe fraude;
@@ -143,17 +152,27 @@ Para produção ou benchmark formal, recomenda-se split por grupos de registros 
 
 ## Contexto acadêmico
 
-O projeto foi desenvolvido como material de estudo do **Módulo 05 — Análise de Dados com Python**, consolidando conceitos do exercício de detecção de anomalias em transações e adicionando validações e análises próprias.
+O projeto foi desenvolvido como material de estudo do **Módulo 05 — Análise de Dados com Python** do **DIO Bootcamp Bradesco — GenAI, Dados & Cyber**, no escopo do **Desafio de Projeto 5.8 — Detecção de Anomalias em Transações em Python**.
 
-A cobertura detalhada está em [`docs/COBERTURA_5_8.md`](docs/COBERTURA_5_8.md).
+A cobertura detalhada está em [`docs/COBERTURA_5_8.md`](docs/COBERTURA_5_8.md) e o gate de auditoria atual em [`AUDIT_STATUS.md`](AUDIT_STATUS.md).
 
 ## Documentação complementar
 
+- [`AUDIT_STATUS.md`](AUDIT_STATUS.md) — matriz de aderência, limitações e baseline auditada.
 - [`docs/METODOLOGIA.md`](docs/METODOLOGIA.md) — decisões metodológicas e checkpoints.
 - [`docs/RESULTADOS.md`](docs/RESULTADOS.md) — resultados originais e análise de sensibilidade.
 - [`docs/COBERTURA_5_8.md`](docs/COBERTURA_5_8.md) — cobertura do conteúdo acadêmico.
-- [`docs/PUBLICACAO_GITHUB.md`](docs/PUBLICACAO_GITHUB.md) — roteiro de commit e publicação.
+- [`docs/PUBLICACAO_GITHUB.md`](docs/PUBLICACAO_GITHUB.md) — histórico e checklist de publicação.
+- [`NOTICE.md`](NOTICE.md) — proveniência e fronteiras de direitos de terceiros.
 
-## Licença
+## Direitos e reutilização
 
-Nenhuma licença foi aplicada automaticamente. Para um portfólio aberto, uma licença permissiva como **MIT** é uma opção comum, mas a escolha deve ser feita pelo proprietário do repositório antes da publicação pública.
+O repositório possui uma política explícita de direitos em [`LICENSE`](LICENSE): **All Rights Reserved** para o material original de Otávio Diniz, sem relicenciamento de dataset, conteúdos de curso, bibliotecas, marcas, publicações ou outros materiais de terceiros.
+
+A disponibilidade pública no GitHub não transforma o projeto em software open source nem concede permissão geral de cópia, modificação, distribuição ou exploração comercial.
+
+## Estado da auditoria
+
+`EVALUATOR_READINESS=PASS_COM_LIMITACOES_DE_REPRODUTIBILIDADE_HISTORICA`
+
+Essa classificação significa que a documentação e as evidências publicadas permitem a um avaliador localizar o notebook, compreender a metodologia, conferir resultados, limitações, contexto acadêmico e proveniência. Ela **não** afirma reexecução integral do notebook neste ciclo, nem comprova submissão, nota ou certificação institucional na DIO.
