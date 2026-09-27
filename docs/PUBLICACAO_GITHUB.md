@@ -31,14 +31,22 @@ feat: add new fraud detection experiment
 refactor: simplify model evaluation pipeline
 ```
 
-## Checklist de publicação
+## Checklist de publicação — auditado em 26/09/2026
 
-- [x] notebook auditado;
+- [x] notebook auditado e publicado;
 - [x] metadados pessoais do Colab removidos da versão pública;
 - [x] dataset CSV não versionado;
-- [x] README com resultados finais;
+- [x] README com resultados finais e contexto acadêmico;
 - [x] `requirements.txt` com dependências usadas;
 - [x] resultados e limitações documentados;
 - [x] branch principal `main`;
 - [x] repositório público;
-- [ ] licença — não definida automaticamente; decisão permanece com o proprietário.
+- [x] política explícita de direitos em `LICENSE`;
+- [x] proveniência e direitos de terceiros documentados em `NOTICE.md`;
+- [x] gate de prontidão para avaliação em `AUDIT_STATUS.md`.
+
+## Nota de versionamento
+
+As versões exatas do runtime histórico não foram preservadas no ciclo original. Por integridade, a auditoria atual não cria um lockfile retroativo nem atribui versões de dependências sem evidência. Essa limitação está registrada em `AUDIT_STATUS.md` e no README.
+
+A publicação no GitHub não comprova, isoladamente, submissão, nota ou certificação institucional na DIO.
