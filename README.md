@@ -176,3 +176,11 @@ A disponibilidade pública no GitHub não transforma o projeto em software open 
 `EVALUATOR_READINESS=PASS_COM_LIMITACOES_DE_REPRODUTIBILIDADE_HISTORICA`
 
 Essa classificação significa que a documentação e as evidências publicadas permitem a um avaliador localizar o notebook, compreender a metodologia, conferir resultados, limitações, contexto acadêmico e proveniência. Ela **não** afirma reexecução integral do notebook neste ciclo, nem comprova submissão, nota ou certificação institucional na DIO.
+
+## Orientação acadêmica e reconhecimento
+
+O desafio **5.8 — Detecção de Anomalias em Transações em Python** foi conduzido por **Isadora D.S. Ferrão (Isadora Ferrão)**. A transcrição do curso registra o convite da instrutora para que os participantes compartilhassem os resultados e a marcassem nas redes sociais. Perfil profissional localizado: <https://br.linkedin.com/in/isadora-ferrao>.
+
+Este repositório integra o **DIO Bootcamp Bradesco — GenAI, Dados & Cyber** e referencia a **`@digitalinnovationone`** como organização da plataforma. Agradeço à Isadora, à DIO e ao Bradesco pelo conteúdo e pela oportunidade de aplicar análise de dados, modelagem, desbalanceamento e explicabilidade em um projeto auditável.
+
+Feedback técnico sobre metodologia, tratamento do desbalanceamento, comparação de modelos, SHAP e limitações do experimento é bem-vindo. Como não foi autenticado um GitHub pessoal da instrutora com segurança, **nenhum `@handle` foi inferido**. As menções registram origem acadêmica e reconhecimento e não implicam endosso ou avaliação institucional.
