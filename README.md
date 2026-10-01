@@ -3,28 +3,37 @@
 Projeto de análise de dados e classificação de fraudes em transações de cartão de crédito, desenvolvido em Python com foco em **dados desbalanceados, comparação de modelos, explicabilidade e validação metodológica**.
 
 > **Contexto acadêmico:** DIO Bootcamp Bradesco — GenAI, Dados & Cyber, Módulo 05 — Análise de Dados com Python, Desafio de Projeto 5.8 — Detecção de Anomalias em Transações em Python.
->
-> **Auditoria de prontidão para avaliação:** 26/09/2026. Consulte [`AUDIT_STATUS.md`](AUDIT_STATUS.md).
 
-## Visão geral
+## Resumo
 
-O dataset contém **284.807 transações**, das quais **492 são fraudes** — aproximadamente **0,1727%** da base. Por isso, a análise não usa acurácia isoladamente como critério de qualidade.
+O projeto investiga como diferentes estratégias de Machine Learning se comportam em uma base extremamente desbalanceada de transações de cartão.
 
-O notebook percorre o fluxo completo:
+O dataset contém **284.807 transações**, das quais **492 são fraudes** — aproximadamente **0,1727%** da base. Por isso, a análise evita usar acurácia isoladamente como critério de qualidade e prioriza métricas adequadas a eventos raros.
 
-1. carregamento e validação dos dados;
-2. análise de qualidade;
-3. análise exploratória;
-4. feature engineering;
-5. split estratificado e padronização sem leakage pelo scaler;
-6. Regressão Logística como baseline;
-7. ROC e Precision-Recall;
-8. undersampling e ajuste de threshold;
-9. Random Forest;
-10. XGBoost e GridSearchCV;
-11. feature importance e SHAP;
-12. testes de integridade, profiling e auditoria de duplicatas;
-13. análise de sensibilidade e deliberação técnica final.
+O notebook percorre desde validação e análise exploratória até Regressão Logística, undersampling, Random Forest, XGBoost, ajuste de threshold, Precision-Recall, SHAP e uma análise de sensibilidade sobre duplicatas entre treino e teste.
+
+## Problema analítico
+
+Em detecção de fraude, o custo de um falso negativo e o custo de um falso positivo podem ser muito diferentes. Ao mesmo tempo, a raridade da classe positiva faz com que uma métrica aparentemente alta possa esconder desempenho ruim justamente nos casos mais importantes.
+
+A análise procura responder:
+
+- como comparar modelos em uma base altamente desbalanceada;
+- quanto recall adicional custa em falsos positivos;
+- como threshold e estratégia de amostragem alteram o comportamento;
+- quais features mais influenciam os modelos;
+- como duplicatas entre treino e teste afetam a interpretação dos resultados.
+
+## Estado atual
+
+- **Notebook analítico:** materializado em `notebooks/credit_card_fraud_detection.ipynb`.
+- **Dataset:** baixado automaticamente pelo notebook; o CSV não é versionado no repositório.
+- **Modelos avaliados:** Regressão Logística, undersampling, Random Forest e XGBoost.
+- **Explicabilidade:** feature importance e SHAP incluídos.
+- **Auditoria metodológica:** duplicatas entre treino/teste investigadas e análise de sensibilidade incorporada à conclusão.
+- **Auditoria de prontidão:** realizada em 26/09/2026; consulte [`AUDIT_STATUS.md`](AUDIT_STATUS.md).
+- **Reprodutibilidade:** documentada com limitações históricas de versões de dependências; nenhuma versão foi inventada retroativamente.
+- **Submissão, nota ou certificação DIO:** não são comprovadas pelo estado deste repositório.
 
 ## Principais resultados
 
@@ -47,6 +56,61 @@ Não existe um modelo dominante em todas as métricas.
 - **XGBoost ajustado** apresentou maior recall e Average Precision, sendo uma alternativa quando a prioridade é detectar mais fraudes, aceitando maior volume de falsos alertas.
 - **Undersampling** elevou fortemente o recall, mas produziu falsos positivos em excesso.
 
+Essas conclusões pertencem ao escopo deste dataset, desta metodologia e dos experimentos documentados; não constituem benchmark universal de produção.
+
+## Como reproduzir a análise
+
+### Google Colab
+
+Abra `notebooks/credit_card_fraud_detection.ipynb` no Google Colab e execute as células em ordem.
+
+O notebook baixa o dataset automaticamente. Se o runtime for reiniciado, execute novamente as células anteriores para reconstruir os objetos em memória.
+
+### Ambiente local
+
+```bash
+git clone https://github.com/otavio-diniz/credit-card-fraud-detection-ml.git
+cd credit-card-fraud-detection-ml
+
+python -m venv .venv
+source .venv/bin/activate   # Linux/macOS
+# .venv\Scripts\activate  # Windows
+
+pip install -r requirements.txt
+jupyter notebook
+```
+
+Depois abra `notebooks/credit_card_fraud_detection.ipynb`.
+
+## Metodologia
+
+O fluxo analítico documentado inclui:
+
+1. carregamento e validação dos dados;
+2. análise de qualidade;
+3. análise exploratória;
+4. feature engineering;
+5. split estratificado e padronização sem leakage pelo scaler;
+6. Regressão Logística como baseline;
+7. curvas ROC e Precision-Recall;
+8. undersampling e ajuste de threshold;
+9. Random Forest;
+10. XGBoost e GridSearchCV;
+11. feature importance e SHAP;
+12. testes de integridade, profiling e auditoria de duplicatas;
+13. análise de sensibilidade e deliberação técnica final.
+
+### Destaques metodológicos
+
+- `Amount_log = log1p(Amount)` reduziu a assimetria de **16,9777 para 0,1627**.
+- O `StandardScaler` foi ajustado **somente no treino**.
+- O split 70/30 usa `stratify=y` e `random_state=42`.
+- A avaliação prioriza Precision, Recall, F1, ROC-AUC e Average Precision.
+- O tuning do XGBoost usa **Average Precision** como `scoring`.
+- O SHAP destacou especialmente `V14` e `V4`.
+- Foi realizada auditoria de duplicatas entre treino e teste.
+- Uma análise de sensibilidade verificou o impacto dessa sobreposição antes da conclusão.
+
 ## Dataset
 
 O notebook carrega automaticamente:
@@ -62,18 +126,7 @@ Variáveis principais:
 - `Amount`: valor da transação, sem moeda assumida;
 - `Class`: `0` para normal e `1` para fraude.
 
-## Destaques metodológicos
-
-- `Amount_log = log1p(Amount)` reduziu a assimetria de **16,9777 para 0,1627**.
-- O `StandardScaler` foi ajustado **somente no treino**.
-- O split 70/30 usa `stratify=y` e `random_state=42`.
-- A avaliação prioriza Precision, Recall, F1, ROC-AUC e Average Precision.
-- O tuning do XGBoost usa **Average Precision** como `scoring`.
-- O SHAP destacou especialmente `V14` e `V4`.
-- Foi realizada auditoria de duplicatas entre treino e teste.
-- Uma análise de sensibilidade verificou o impacto dessa sobreposição antes da conclusão.
-
-## Estrutura do repositório
+## Estrutura e documentação
 
 ```text
 credit-card-fraud-detection-ml/
@@ -92,50 +145,29 @@ credit-card-fraud-detection-ml/
     └── PUBLICACAO_GITHUB.md
 ```
 
-## Como executar
+Documentação complementar:
 
-### Google Colab
+- [`AUDIT_STATUS.md`](AUDIT_STATUS.md) — matriz de aderência, limitações e baseline auditada.
+- [`docs/METODOLOGIA.md`](docs/METODOLOGIA.md) — decisões metodológicas e checkpoints.
+- [`docs/RESULTADOS.md`](docs/RESULTADOS.md) — resultados originais e análise de sensibilidade.
+- [`docs/COBERTURA_5_8.md`](docs/COBERTURA_5_8.md) — cobertura do conteúdo acadêmico.
+- [`docs/PUBLICACAO_GITHUB.md`](docs/PUBLICACAO_GITHUB.md) — histórico e checklist de publicação.
+- [`NOTICE.md`](NOTICE.md) — proveniência e fronteiras de direitos de terceiros.
 
-Abra `notebooks/credit_card_fraud_detection.ipynb` no Google Colab e execute as células em ordem.
-
-O notebook baixa o dataset automaticamente.
-
-> Se o runtime for reiniciado, execute novamente as células anteriores para reconstruir os objetos em memória.
-
-### Ambiente local
-
-```bash
-git clone https://github.com/otavio-diniz/credit-card-fraud-detection-ml.git
-cd credit-card-fraud-detection-ml
-
-python -m venv .venv
-source .venv/bin/activate   # Linux/macOS
-# .venv\Scripts\activate  # Windows
-
-pip install -r requirements.txt
-jupyter notebook
-```
-
-Abra então o notebook em `notebooks/`.
-
-## Dependências
+## Dependências e reprodutibilidade
 
 As dependências principais estão em `requirements.txt`:
 
-- NumPy
-- pandas
-- Matplotlib
-- scikit-learn
-- XGBoost
-- SHAP
+- NumPy;
+- pandas;
+- Matplotlib;
+- scikit-learn;
+- XGBoost;
+- SHAP.
 
 As versões exatas do runtime original não foram registradas; o arquivo não fixa versões artificialmente.
 
-## Reprodutibilidade
-
-As principais etapas aleatórias utilizam `random_state=42`.
-
-Os tempos de execução não são considerados métricas determinísticas e podem variar conforme o runtime.
+As principais etapas aleatórias utilizam `random_state=42`. Tempos de execução não são considerados métricas determinísticas e podem variar conforme o runtime.
 
 A auditoria de 26/09/2026 preservou a limitação histórica de versões de dependências em vez de criar um lockfile retroativo sem evidência. Detalhes em [`AUDIT_STATUS.md`](AUDIT_STATUS.md).
 
@@ -146,41 +178,33 @@ A auditoria de 26/09/2026 preservou a limitação histórica de versões de depe
 - janela temporal curta da base;
 - duplicatas de conteúdo no split original;
 - ausência de custos financeiros reais para calibrar FP e FN;
-- oversampling foi discutido, mas não usado como experimento principal.
+- oversampling foi discutido, mas não usado como experimento principal;
+- versões exatas do runtime original não foram preservadas.
 
-Para produção ou benchmark formal, recomenda-se split por grupos de registros idênticos ou deduplicação controlada antes do treinamento, validação temporal e escolha de threshold orientada por custos reais.
+Para produção ou benchmark formal, o próprio projeto recomenda considerar split por grupos de registros idênticos ou deduplicação controlada antes do treinamento, validação temporal e escolha de threshold orientada por custos reais.
 
-## Contexto acadêmico
+## Contexto acadêmico e reconhecimento
 
 O projeto foi desenvolvido como material de estudo do **Módulo 05 — Análise de Dados com Python** do **DIO Bootcamp Bradesco — GenAI, Dados & Cyber**, no escopo do **Desafio de Projeto 5.8 — Detecção de Anomalias em Transações em Python**.
 
-A cobertura detalhada está em [`docs/COBERTURA_5_8.md`](docs/COBERTURA_5_8.md) e o gate de auditoria atual em [`AUDIT_STATUS.md`](AUDIT_STATUS.md).
+O desafio foi conduzido por **Isadora D.S. Ferrão (Isadora Ferrão)**. A transcrição do curso registra o convite da instrutora para que os participantes compartilhassem os resultados e a marcassem nas redes sociais. Perfil profissional localizado: <https://br.linkedin.com/in/isadora-ferrao>.
 
-## Documentação complementar
+A cobertura acadêmica detalhada está em [`docs/COBERTURA_5_8.md`](docs/COBERTURA_5_8.md).
 
-- [`AUDIT_STATUS.md`](AUDIT_STATUS.md) — matriz de aderência, limitações e baseline auditada.
-- [`docs/METODOLOGIA.md`](docs/METODOLOGIA.md) — decisões metodológicas e checkpoints.
-- [`docs/RESULTADOS.md`](docs/RESULTADOS.md) — resultados originais e análise de sensibilidade.
-- [`docs/COBERTURA_5_8.md`](docs/COBERTURA_5_8.md) — cobertura do conteúdo acadêmico.
-- [`docs/PUBLICACAO_GITHUB.md`](docs/PUBLICACAO_GITHUB.md) — histórico e checklist de publicação.
-- [`NOTICE.md`](NOTICE.md) — proveniência e fronteiras de direitos de terceiros.
+Agradeço à Isadora, à DIO e ao Bradesco pelo conteúdo e pela oportunidade de aplicar análise de dados, modelagem, desbalanceamento e explicabilidade em um projeto auditável.
 
-## Direitos e reutilização
+Feedback técnico sobre metodologia, tratamento do desbalanceamento, comparação de modelos, SHAP e limitações do experimento é bem-vindo. Como não foi autenticado um GitHub pessoal da instrutora com segurança, **nenhum `@handle` foi inferido**. As menções registram origem acadêmica e reconhecimento e não implicam endosso ou avaliação institucional.
 
-O repositório possui uma política explícita de direitos em [`LICENSE`](LICENSE): **All Rights Reserved** para o material original de Otávio Diniz, sem relicenciamento de dataset, conteúdos de curso, bibliotecas, marcas, publicações ou outros materiais de terceiros.
+## Autoria, licença e direitos de terceiros
+
+O repositório possui política explícita em [`LICENSE`](LICENSE): **All Rights Reserved** para o material original de Otávio Diniz, sem relicenciamento de dataset, conteúdos de curso, bibliotecas, marcas, publicações ou outros materiais de terceiros.
 
 A disponibilidade pública no GitHub não transforma o projeto em software open source nem concede permissão geral de cópia, modificação, distribuição ou exploração comercial.
+
+Consulte [`NOTICE.md`](NOTICE.md) para proveniência e fronteiras de direitos de terceiros.
 
 ## Estado da auditoria
 
 `EVALUATOR_READINESS=PASS_COM_LIMITACOES_DE_REPRODUTIBILIDADE_HISTORICA`
 
-Essa classificação significa que a documentação e as evidências publicadas permitem a um avaliador localizar o notebook, compreender a metodologia, conferir resultados, limitações, contexto acadêmico e proveniência. Ela **não** afirma reexecução integral do notebook neste ciclo, nem comprova submissão, nota ou certificação institucional na DIO.
-
-## Orientação acadêmica e reconhecimento
-
-O desafio **5.8 — Detecção de Anomalias em Transações em Python** foi conduzido por **Isadora D.S. Ferrão (Isadora Ferrão)**. A transcrição do curso registra o convite da instrutora para que os participantes compartilhassem os resultados e a marcassem nas redes sociais. Perfil profissional localizado: <https://br.linkedin.com/in/isadora-ferrao>.
-
-Este repositório integra o **DIO Bootcamp Bradesco — GenAI, Dados & Cyber** e referencia a **`@digitalinnovationone`** como organização da plataforma. Agradeço à Isadora, à DIO e ao Bradesco pelo conteúdo e pela oportunidade de aplicar análise de dados, modelagem, desbalanceamento e explicabilidade em um projeto auditável.
-
-Feedback técnico sobre metodologia, tratamento do desbalanceamento, comparação de modelos, SHAP e limitações do experimento é bem-vindo. Como não foi autenticado um GitHub pessoal da instrutora com segurança, **nenhum `@handle` foi inferido**. As menções registram origem acadêmica e reconhecimento e não implicam endosso ou avaliação institucional.
+Essa classificação significa que a documentação e as evidências publicadas permitem a um avaliador localizar o notebook, compreender metodologia, resultados, limitações, contexto acadêmico e proveniência. Ela **não** afirma reexecução integral do notebook no ciclo de auditoria, nem comprova submissão, nota ou certificação institucional na DIO.
